@@ -11,7 +11,7 @@ public class Zaklad {
     public static final long CENA_BRUTTO = 300L;
     public static final long PODATEK = 60L;
     public static final long CENA_NETTO = CENA_BRUTTO - PODATEK;
-    private final HashSet<> liczby;
+    private final Set<Integer> liczby;
 
     // moze niekoniecznie public?
     public Zaklad(Set<Integer> liczby) throws IllegalArgumentException {
@@ -53,14 +53,18 @@ public class Zaklad {
     }
 
     public Set<Integer> dajLiczby() {
-        return liczby;
+        return new HashSet<>(liczby);
     }
 
-    /*
-    public int ileTrafien() {
 
+    public int ileTrafien(Set<Integer> zwycieskieLiczby) {
+        /*
+        Na poczatku robilem to bardziej standardowo, liczac rozmiar
+        przeciecia, ale znalazlem taki elegancki sposob
+         */
+        return (int) this.liczby.stream().filter(zwycieskieLiczby::contains).count();
     }
-    */
+
 
     // to String ?
 

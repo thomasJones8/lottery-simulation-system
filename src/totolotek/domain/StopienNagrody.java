@@ -15,4 +15,14 @@ public enum StopienNagrody {
     public int dajWymaganeTrafienia() {
         return wymaganeTrafienia;
     }
+
+    public static StopienNagrody naPodstawieTrafien(int liczbaTrafien) {
+        for (StopienNagrody stopien: StopienNagrody.values()) {
+            if (liczbaTrafien == stopien.dajWymaganeTrafienia()) {
+                return stopien;
+            }
+        }
+        // tzn ze trafien bylo mniej niz nagradzane minimum
+        return null;
+    }
 }

@@ -101,6 +101,7 @@ public class Kupon {
     public int dajLiczbeLosowan() { return liczbaLosowan;}
     public int dajLiczbeZakladow() { return zaklady.size();}
 
+    public List<Zaklad> dajZaklady() { return new ArrayList<>(this.zaklady);}
     public long dajPodatek() { return podatek;}
 
     // UWAGA !! TO STRING NIEDOKOCZNONY

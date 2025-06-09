@@ -54,7 +54,8 @@ public class Centrala {
         int numerLosowania = dajNumerNastepnegoLosowania();
         numerNastepnegoLosowania++;
         // policz trafienia dla kazdego stopnia
-        policzTrafieniaKazdegoStopnia();
+        EnumMap<StopienNagrody, Integer> trafienia = policzTrafieniaKazdegoStopnia(numerLosowania,
+                zwycieskieLiczby);
         // oblicz calkowita pule na nagrody
         // wyznacz kwoty nagrod kazdego stopnia
         // stworz obiekt losowanie
@@ -71,7 +72,27 @@ public class Centrala {
         // jak to 44% na nagrode I stopnia jest mniejsze niz 2 mln, to czy dobieram z budzetu, czy z centrali?
     }
 
-    private
+    private EnumMap<StopienNagrody, Integer> policzTrafieniaKazdegoStopnia(int numerLosowania,
+                                                                           Set<Integer> zwycieskieLiczby) {
+        // inicjujemy mape
+        EnumMap<StopienNagrody, Integer> trafienia = new EnumMap<>(StopienNagrody.class);
+        for (StopienNagrody stopien : StopienNagrody.values()) {
+            trafienia.put(stopien, 0);
+        }
+
+        for (Kolektura kolektura: listaKolektur) {
+            // petla po wszystkich kuponach sprzedanych przez kolekture
+            for (Kupon kupon : kolektura.dajSprzedaneKupony().values()) {
+                // czy ten kupon obejmuje to losowanie && niewyplacony
+                if (!kupon.sprawdzCzyWyplacony() && kupon.czyObejmujeLosowanie(numerLosowania)) {
+                    // petla po wszystkich kuponach
+                    for (Zaklad zaklad : kupon.dajZaklady()) {
+                        if
+                    }
+                }
+            }
+        }
+    }
 
 
     // przechodzi po wszystkich kolekturach, po ich kuponach, sprawdza ktore
@@ -82,7 +103,7 @@ public class Centrala {
         for (Kolektura kolektura: listaKolektur) {
             // petla po wszystkich kuponach sprzedanych przez kolekture
             for (Kupon kupon : kolektura.dajSprzedaneKupony().values()) {
-                // czy ten kupon obejmuje to losowania
+                // czy ten kupon obejmuje to losowanie
                 if (kupon.czyObejmujeLosowanie(numerLosowania)) {
                     wynik += kupon.dajLiczbeZakladow() * Zaklad.CENA_NETTO;
                 }
