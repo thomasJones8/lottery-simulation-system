@@ -8,6 +8,8 @@ import totolotek.kolektura.Kolektura;
 
 import java.util.*;
 
+import static java.lang.Math.max;
+
 
 
 
@@ -20,6 +22,14 @@ mam enum stopien nagrody, record wynik stopnia i mape ktora wiaze jedno z drugim
 public class Centrala {
 
     public static final int PROCENT_NA_NAGRODY = 51;
+    public static final long NAGRODA_4_STOPNIA = 2400L;
+    public static final long MIN_PULA_1_STOPIEN = 200000000L;
+
+    public static final long MIN_NAGRODA_3_STOPIEN = Zaklad.CENA_NETTO * 36;
+    public static final int PROCENT_NA_1_STOPIEN = 44;
+
+    public static final int PROCENT_NA_2_STOPIEN = 8;
+
     private int numerNastepnegoLosowania;
     private int numerNastepnegoKuponu;
     private int numerNastepnejKolektury;
@@ -78,15 +88,36 @@ public class Centrala {
     private Map<StopienNagrody, WynikStopnia> wyznaczNagrody(int numerLosowania, EnumMap<StopienNagrody,
             Integer> trafienia, long calkowitaPula) {
         Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>();
-        // chyba najpierw ile trafien
-        long pula1
+        //najpierw 4 stopien
+        //long pula4Stopien = trafienia.getOrDefault(StopienNagrody.4_STOPIEN, 0) * NAGRODA_4_STOPNIA;
+        wyniki.put(StopienNagrody.4_STOPIEN, obliczWynik4Stopnia(trafienia.getOrDefault(StopienNagrody.4_STOPIEN, 0)));
+        wyniki.put(StopienNagrody.I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(StopienNagrody.I_STOPIEN, 0)));
+        wyniki.put(StopienNagrody.II_STOPIEN, obliczWynikIIStopnia(calkowitaPula, trafienia.getOrDefault(StopienNagrody.II_STOPIEN, 0)));
+        // od calkowitej puli odejmij pule pierwszych 3 nagrod
+        wyniki.put(StopienNagrody.III_STOPIEN, obliczWynikIIIStopnia(resztaPuli, trafienia.getOrDefault(StopienNagrody.III_STOPIEN, 0)));
+
 
         return wyniki;
     }
 
-    private WynikStopnia obliczWynikStopnia(StopienNagrody stopien, long calkowitaPula, EnumMap<StopienNagrody,
-            Integer> trafienia) {
+    private static WynikStopnia obliczWynikIStopnia(long calkowitaPula, int liczbaTrafien) {
+        long mojaPula = max(MIN_PULA_1_STOPIEN, (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100);
+        return new WynikStopnia(mojaPula / liczbaTrafien, liczbaTrafien,
+                mojaPula);
+    }
 
+    private static WynikStopnia obliczWynikIIStopnia(long calkowitaPula, int liczbaTrafien) {
+        long mojaPula = (calkowitaPula * PROCENT_NA_2_STOPIEN) / 100;
+        return new WynikStopnia(mojaPula / liczbaTrafien, liczbaTrafien,
+                mojaPula);
+    }
+
+    private static WynikStopnia obliczWynikIIIStopnia(long resztaPuli, int liczbaTrafien) {
+        long nagroda = max(MIN_NAGRODA_3_STOPIEN, resztaPuli / liczbaTrafien);
+        return new WynikStopnia(nagroda, liczbaTrafien, nagroda * liczbaTrafien);
+    }
+    private static WynikStopnia obliczWynik4Stopnia(int liczbaTrafien) {
+         return new WynikStopnia(NAGRODA_4_STOPNIA, liczbaTrafien, NAGRODA_4_STOPNIA * liczbaTrafien);
     }
 
     private EnumMap<StopienNagrody, Integer> policzTrafieniaKazdegoStopnia(int numerLosowania,
