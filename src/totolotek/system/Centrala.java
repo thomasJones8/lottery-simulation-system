@@ -199,4 +199,20 @@ public class Centrala {
     public void pobierzZysk(long kwota) {
         budzet += kwota;
     }
+
+    public String wypiszWynikiWszystkichLosowan() {
+        StringBuilder s = new StringBuilder();
+        for (Losowanie losowanie : losowania.values()) {
+            for (WynikStopnia wynik : losowanie.dajWyniki().values()) {
+                // POTENCJALNIE ZMIENIC - TAK, BY NIE OMIJAL NIETRAFIONYCH
+                if (wynik.liczbaZwycieskichZakladow() != 0) {
+                    s.append(wynik.toString());
+                    s.append("\n");
+                }
+            }
+            s.append("\n");
+        }
+
+        return s.toString();
+    }
 }

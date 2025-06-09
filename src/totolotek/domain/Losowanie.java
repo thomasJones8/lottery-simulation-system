@@ -1,11 +1,12 @@
 package totolotek.domain;
 
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class Losowanie {
-    private int numerLosowania;
+    private final int numerLosowania;
     private final Set<Integer> zwycieskieLiczby;
     private final Map<StopienNagrody, WynikStopnia> wyniki;
 
@@ -16,6 +17,10 @@ public class Losowanie {
     }
 
     public int dajNumer() { return numerLosowania;}
+
+    public Map<StopienNagrody, WynikStopnia> dajWyniki() { return new EnumMap<>(StopienNagrody.class);}
+
+
 
     @Override public String toString() {
         StringBuilder s = new StringBuilder();
