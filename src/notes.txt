@@ -1,0 +1,97 @@
+jak obslugiwac magic numbers?
+a jak wyjatki?
+mamy nie korzystac z double, a podatek jest 0,60 + Przy wszelkiego rodzaju obliczeniach procentowych oraz przy podziale puli między graczy, jeśli wychodzi niecałkowita liczba groszy, w tym zadaniu należy zaokrąglić w dół do pełnego grosza.
+moze obslugiwac po prostu kwoty w groszach
+
+
+
+
+1. Centrala:
+skarbiec - podajemy w konstruktorze
+kolekcja losowan. Zawsze musi w niej byc 10 niezakoncoznych losowan
+
+pobierzSubwencje: dodaje do swojego skarbca, dodaje do lacznej kwoty subwencji
+
+oraz wypisywać stan swoich środków finansowych.
+wypiszWynikiWszystkichLosowan
+
+2. Kupon
+czybylwyplacony
+w jakiej kolekturze kupiony (czy gracz nie spreparowal - prywanty konstruktor? nie no chyba bez przesy)
+ile zakladow
+ile losowan
+cena ?
+zaklady : jakis hash set czy costam, albo protsza lista
+
+2.5 zaklad?
+przechowuje 6 liczb
+
+
+3. Losowanie
+ID
+6 liczb rosnaco (hash tree?)
+zmeinna statyczna : aktualna kwota kumulacji
+nagroda stopnia 1, 2 ...
+kolekcja kuponow tego losowania
+kasa zarobiona przez to losowanie
+czy_zakonczone
+
+losuj () - pewnie rozbite na metody pomocnicze. Losuje liczby i pule nagord.
+po reazliacji losowania autoamtycznie dodaje kolejne niezrealizowane do kolekcji w centrali.
+
+
+4. Kolektura
+ID
+przechowuje w swojej bazie wszystkie sprzedane przez siebie kupony - kolejnosc raczej sie nie liczy, sa unikalne - hashset?
+moze odzielnie zrealizowane i niezrealizowane?
+"Kolektura może mieć własny bufor finansowy, ale w tym zadaniu go nie modelujemy." - czyli nie dodawac jej hajsu tylko zawsze
+jak placi lub dostaje to dawac/brrac z centrali
+
+sprzedaj(klient)   - czy klient ma wystarczajaco kasy? nie - nie ma transkacji. Tak - daj mu kupon
+i przekaz kase centrali i skarbowi panstwa.
+
+tzw. "chybił-trafił". W tym drugim przypadku do sprzedaży kuponu wystarczy podać liczbę zakładów i liczbę losowań
+nie ma sensu chyba tworzyc odrebnych klas. Wystarczy miec 2 metody sprzedaj - z blankietem lub bez
+
+metoda pomocnicza generuj kupon chybiil trafil
+nadaj id kuponowi (czy to moze byc publiczne? )
+
+
+
+5. Blankiet
+pola - ponumerowane, ale to nie znaczy, ze kolejnosc sie liczy
+
+
+6. pole
+tablica booli, indeksowana od zera, zeby numer = indeks ?. ale w sumie ponumerowane nie znaczy
+ze kolejnosc sie liczy, moze lepiej jakies hashowanie
+
+
+7. budzt panstwa
+kwota jest fantomowa
+static --- Potrafi także wypisywać łączną kwotę pobranych podatków i łączną kwotę przekazanych subwencji.
+
+
+8. Oddzzielna klasa na stale?
+ 2mln minimum? 24 zl jakastam nagroda
+ 6 ile liczb
+ile losowan maks
+ile pól w blankiecie
+
+
+
+X. Klasa abstrakcyjna gracz
+imie
+nazwisko
+pesel
+kasa
+
+odbierz wygrana?
+
+
+podklasy - typy graczy:
+
+
+
+
+
