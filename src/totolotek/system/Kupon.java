@@ -54,7 +54,7 @@ public class Kupon {
         this.numerPorzadkowy = numerPorzadkowy;
         id = generujId(numerPorzadkowy, idKolektury);
         this.cenaBrutto = cenaBrutto;
-        podatek = Stale.PODATEK_ZAKLAD * liczbaLosowan * liczbaZakladow;
+        podatek = Zaklad.PODATEK * liczbaLosowan * liczbaZakladow;
         this.zaklady = new ArrayList<>(listaZakladow);
         this.liczbaLosowan = liczbaLosowan;
         this.numerPierwszegoLosowania = numerPierwszegoLosowania;

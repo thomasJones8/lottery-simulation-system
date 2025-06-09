@@ -2,6 +2,7 @@ package totolotek.testyintegracyjne;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import totolotek.domain.Zaklad;
 import totolotek.system.BudzetPanstwa;
 import totolotek.system.Centrala;
 import totolotek.util.Stale;
@@ -48,15 +49,15 @@ public class SprzedazKuponuTestIntegracyjny {
     //udana zwykla transakcja
     @Test
     void testZwyklaUdanaSprzedaz() {
-        minimalista = new Minimalista("Jan" , "Kow", "123", Stale.CENA_ZAKLADU, kolektura);
-        assertTrue(minimalista.czyStac(Stale.CENA_ZAKLADU));
+        minimalista = new Minimalista("Jan" , "Kow", "123", Zaklad.CENA_BRUTTO, kolektura);
+        assertTrue(minimalista.czyStac(Zaklad.CENA_BRUTTO));
         // probuje kupic 1 kupon chybil trafil
         minimalista.kupKupon();
 
         // centrala powinna miec zysk
-        assertEquals(Stale.CENA_ZAKLADU - Stale.PODATEK_ZAKLAD , centrala.dajBudzet());
+        assertEquals(Zaklad.CENA_NETTO, centrala.dajBudzet());
         // zebrane podatki powinny byc rowne podatkowi
-        assertEquals(Stale.PODATEK_ZAKLAD, BudzetPanstwa.dajInstancje().dajPobranePodatkiSuma());
+        assertEquals(Zaklad.PODATEK, BudzetPanstwa.dajInstancje().dajPobranePodatkiSuma());
         // sprzedane kupony NIE powinny byc puste
         assertFalse(kolektura.dajSprzedaneKupony().isEmpty());
     }

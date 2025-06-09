@@ -46,7 +46,7 @@ public class Kolektura {
 
     // sprzedaje kupon chybil-trafil
     public boolean sprzedajKupon(int liczbaZakladow, int liczbaLosowan, Gracz gracz) {
-        long cenaKuponuBrutto = Stale.CENA_ZAKLADU * liczbaZakladow * liczbaLosowan;
+        long cenaKuponuBrutto = Zaklad.CENA_BRUTTO * liczbaZakladow * liczbaLosowan;
         // zachodzi tylko jak gracza stac
         if (gracz.czyStac(cenaKuponuBrutto)) {
             // generujemy kupon
@@ -65,7 +65,7 @@ public class Kolektura {
         List<Zaklad> zaklady = blankiet.dajPoprawneNieanulowaneZaklady();
         int liczbaLosowan = blankiet.dajLiczbeLosowan();
         // do ceny licza sie tylko poprawnie wypelnione zaklady
-        long cenaKuponuBrutto = Stale.CENA_ZAKLADU * zaklady.size() * liczbaLosowan;
+        long cenaKuponuBrutto = Zaklad.CENA_BRUTTO * zaklady.size() * liczbaLosowan;
         // w przypadku pustego blankietu (0 poprawnych zakladow) nie dochodzi do sprzedazy
         if (gracz.czyStac(cenaKuponuBrutto) && zaklady.size() >= Kupon.MIN_LICZBA_ZAKLADOW) {
             dokonczSprzedaz(gracz, centrala.stworzKupon(liczbaLosowan, id, zaklady, cenaKuponuBrutto));

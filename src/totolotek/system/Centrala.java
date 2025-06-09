@@ -6,9 +6,11 @@ import totolotek.domain.WynikStopnia;
 import totolotek.domain.Zaklad;
 import totolotek.kolektura.Kolektura;
 
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static java.lang.Math.max;
+import static totolotek.domain.StopienNagrody.I_STOPIEN;
 
 
 
@@ -35,8 +37,8 @@ public class Centrala {
     private int numerNastepnejKolektury;
     private long budzet;
 
-    private List<Kolektura> listaKolektur;
-    private Map<Integer, Losowanie> losowania;
+    private final List<Kolektura> listaKolektur;
+    private final Map<Integer, Losowanie> losowania;
 
     public Centrala(long budzetPoczatkowy) {
         budzet = budzetPoczatkowy;
@@ -72,48 +74,64 @@ public class Centrala {
         Map<StopienNagrody, WynikStopnia> wyniki = wyznaczNagrody(numerLosowania, trafienia, calkowitaPula);
 
         // stworz obiekt losowanie
+        Losowanie losowanie = new Losowanie(numerLosowania, zwycieskieLiczby, wyniki);
         // zapisz do historii losowan
-
-
-
-        // tworzenie i zapisanie obiektu
-        //Losowanie losowanie = new Losowanie(dajNumerNastepnegoLosowania(), Zaklad.losujSzostke());
-        //losowania.put(losowanie.dajNumer(), losowanie);
-
-        //long pula = obliczPuleNaNagrody(losowanie.dajNumer());
-
-        // jak to 44% na nagrode I stopnia jest mniejsze niz 2 mln, to czy dobieram z budzetu, czy z centrali?
+        losowania.put(losowanie.dajNumer(), losowanie);
     }
 
     private Map<StopienNagrody, WynikStopnia> wyznaczNagrody(int numerLosowania, EnumMap<StopienNagrody,
             Integer> trafienia, long calkowitaPula) {
-        Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>();
+        Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>(StopienNagrody.class);
         //najpierw 4 stopien
         //long pula4Stopien = trafienia.getOrDefault(StopienNagrody.4_STOPIEN, 0) * NAGRODA_4_STOPNIA;
-        wyniki.put(StopienNagrody.4_STOPIEN, obliczWynik4Stopnia(trafienia.getOrDefault(StopienNagrody.4_STOPIEN, 0)));
-        wyniki.put(StopienNagrody.I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(StopienNagrody.I_STOPIEN, 0)));
-        wyniki.put(StopienNagrody.II_STOPIEN, obliczWynikIIStopnia(calkowitaPula, trafienia.getOrDefault(StopienNagrody.II_STOPIEN, 0)));
+        wyniki.put(StopienNagrody.IV_STOPIEN, obliczWynik4Stopnia(trafienia.getOrDefault(StopienNagrody.IV_STOPIEN, 0)));
+        wyniki.put(I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0)));
+        wyniki.put(StopienNagrody.II_STOPIEN, obliczWynikIIStopnia(calkowitaPula,
+                trafienia.getOrDefault(StopienNagrody.II_STOPIEN, 0)));
         // od calkowitej puli odejmij pule pierwszych 3 nagrod
-        wyniki.put(StopienNagrody.III_STOPIEN, obliczWynikIIIStopnia(resztaPuli, trafienia.getOrDefault(StopienNagrody.III_STOPIEN, 0)));
+        long resztaPuli = calkowitaPula - wyniki.values().stream().mapToLong(WynikStopnia::lacznaPulaNagrod).sum();
+        wyniki.put(StopienNagrody.III_STOPIEN, obliczWynikIIIStopnia(resztaPuli,
+                trafienia.getOrDefault(StopienNagrody.III_STOPIEN, 0)));
+        // dopiero teraz uwzgledniamy minimum puli 1 stopnia, aby nie uszczuplilo puli 3 stopnia
+        WynikStopnia staryWynik1Stopien = wyniki.get(I_STOPIEN);
+        WynikStopnia nowyWynik1Stopien;
+        if (staryWynik1Stopien.lacznaPulaNagrod() < MIN_PULA_1_STOPIEN) {
+            if (staryWynik1Stopien.liczbaZwycieskichZakladow() != 0) {
+                // to moj zyciowy rekord jesli chodzi o dlugosc linijki kodu
+                nowyWynik1Stopien = new WynikStopnia(MIN_PULA_1_STOPIEN /
+                        staryWynik1Stopien.liczbaZwycieskichZakladow(),staryWynik1Stopien.liczbaZwycieskichZakladow(),
+                        MIN_PULA_1_STOPIEN);
+            }
+            // nie ma wygranych - chcemy uniknac dzielenia przez 0
+            else  {
+                nowyWynik1Stopien = new WynikStopnia(0, staryWynik1Stopien.liczbaZwycieskichZakladow(),
+                        MIN_PULA_1_STOPIEN);
+            }
+
+            wyniki.put(I_STOPIEN, nowyWynik1Stopien);
+        }
+
 
 
         return wyniki;
     }
 
+    // TRZEBA JESZCZE UWZGLEDNIC KUMULACJE!
     private static WynikStopnia obliczWynikIStopnia(long calkowitaPula, int liczbaTrafien) {
-        long mojaPula = max(MIN_PULA_1_STOPIEN, (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100);
-        return new WynikStopnia(mojaPula / liczbaTrafien, liczbaTrafien,
-                mojaPula);
+        long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100;
+        // zabezpieczenie przed dzieleniem przez 0
+        return new WynikStopnia((liczbaTrafien > 0) ? mojaPula/ liczbaTrafien : 0,
+                liczbaTrafien, mojaPula);
     }
 
     private static WynikStopnia obliczWynikIIStopnia(long calkowitaPula, int liczbaTrafien) {
         long mojaPula = (calkowitaPula * PROCENT_NA_2_STOPIEN) / 100;
-        return new WynikStopnia(mojaPula / liczbaTrafien, liczbaTrafien,
-                mojaPula);
+        return new WynikStopnia((liczbaTrafien > 0) ? mojaPula/ liczbaTrafien : 0,
+                liczbaTrafien, mojaPula);
     }
 
     private static WynikStopnia obliczWynikIIIStopnia(long resztaPuli, int liczbaTrafien) {
-        long nagroda = max(MIN_NAGRODA_3_STOPIEN, resztaPuli / liczbaTrafien);
+        long nagroda = max(MIN_NAGRODA_3_STOPIEN, (liczbaTrafien > 0) ? resztaPuli/ liczbaTrafien : 0);
         return new WynikStopnia(nagroda, liczbaTrafien, nagroda * liczbaTrafien);
     }
     private static WynikStopnia obliczWynik4Stopnia(int liczbaTrafien) {
@@ -165,10 +183,6 @@ public class Centrala {
         // pamietaj ze ceny netto!
         return (wynik * PROCENT_NA_NAGRODY) / 100;
     }
-
-
-
-
 
     public Kolektura stworzKolekture() {
         Kolektura kolektura = new Kolektura(numerNastepnejKolektury++, this);
