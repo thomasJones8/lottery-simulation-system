@@ -50,14 +50,17 @@ public class Centrala {
     public void przeprowadzLosowanie() {
 
         // wylosuj zwycieskie liczby
-        HashSet<Integer> zwycieskieLiczby = HashSet<Integer>(Zaklad.losujSzostke());
+        Set<Integer> zwycieskieLiczby = new HashSet<Integer>(Zaklad.losujSzostke());
         int numerLosowania = dajNumerNastepnegoLosowania();
         numerNastepnegoLosowania++;
         // policz trafienia dla kazdego stopnia
         EnumMap<StopienNagrody, Integer> trafienia = policzTrafieniaKazdegoStopnia(numerLosowania,
                 zwycieskieLiczby);
         // oblicz calkowita pule na nagrody
+        long calkowitaPula = obliczPuleNaNagrody(numerLosowania);
         // wyznacz kwoty nagrod kazdego stopnia
+        Map<StopienNagrody, WynikStopnia> wyniki = wyznaczNagrody(numerLosowania, trafienia, calkowitaPula);
+
         // stworz obiekt losowanie
         // zapisz do historii losowan
 
@@ -65,20 +68,31 @@ public class Centrala {
 
         // tworzenie i zapisanie obiektu
         //Losowanie losowanie = new Losowanie(dajNumerNastepnegoLosowania(), Zaklad.losujSzostke());
-        losowania.put(losowanie.dajNumer(), losowanie);
+        //losowania.put(losowanie.dajNumer(), losowanie);
 
-        long pula = obliczPuleNaNagrody(losowanie.dajNumer());
+        //long pula = obliczPuleNaNagrody(losowanie.dajNumer());
 
         // jak to 44% na nagrode I stopnia jest mniejsze niz 2 mln, to czy dobieram z budzetu, czy z centrali?
     }
 
+    private Map<StopienNagrody, WynikStopnia> wyznaczNagrody(int numerLosowania, EnumMap<StopienNagrody,
+            Integer> trafienia, long calkowitaPula) {
+        Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>();
+        // chyba najpierw ile trafien
+        long pula1
+
+        return wyniki;
+    }
+
+    private WynikStopnia obliczWynikStopnia(StopienNagrody stopien, long calkowitaPula, EnumMap<StopienNagrody,
+            Integer> trafienia) {
+
+    }
+
     private EnumMap<StopienNagrody, Integer> policzTrafieniaKazdegoStopnia(int numerLosowania,
                                                                            Set<Integer> zwycieskieLiczby) {
-        // inicjujemy mape
         EnumMap<StopienNagrody, Integer> trafienia = new EnumMap<>(StopienNagrody.class);
-        for (StopienNagrody stopien : StopienNagrody.values()) {
-            trafienia.put(stopien, 0);
-        }
+
 
         for (Kolektura kolektura: listaKolektur) {
             // petla po wszystkich kuponach sprzedanych przez kolekture
@@ -87,11 +101,19 @@ public class Centrala {
                 if (!kupon.sprawdzCzyWyplacony() && kupon.czyObejmujeLosowanie(numerLosowania)) {
                     // petla po wszystkich kuponach
                     for (Zaklad zaklad : kupon.dajZaklady()) {
-                        if
+                        StopienNagrody stopien = StopienNagrody.naPodstawieTrafien(zaklad.ileTrafien(zwycieskieLiczby));
+                        if (stopien != null) {
+                            // jak nie bylo jeszcze trafien, to zwroci 0 + 1 = 1
+                            int nowaLiczba = trafienia.getOrDefault(stopien,0) + 1;
+                            trafienia.put(stopien, nowaLiczba);
+                        }
+
                     }
                 }
             }
         }
+
+        return trafienia;
     }
 
 
@@ -115,14 +137,7 @@ public class Centrala {
 
 
 
-    private Map<StopienNagrody, WynikStopnia> wyznaczNagrody(int numerLosowania) {
-        Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>();
-        Map<StopienNagrody, Integer> liczbyTrafien = new HashMap<>();
-        // chyba najpierw ile trafien
 
-
-        return wyniki;
-    }
 
     public Kolektura stworzKolekture() {
         Kolektura kolektura = new Kolektura(numerNastepnejKolektury++, this);

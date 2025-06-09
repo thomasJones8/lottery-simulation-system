@@ -25,4 +25,6 @@ public enum StopienNagrody {
         // tzn ze trafien bylo mniej niz nagradzane minimum
         return null;
     }
+
+
 }
