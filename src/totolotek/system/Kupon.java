@@ -43,7 +43,7 @@ public class Kupon {
         int liczbaZakladow = listaZakladow.size();
 
         if (liczbaZakladow < MIN_LICZBA_ZAKLADOW || MAX_LICZBA_ZAKLADOW < liczbaZakladow) {
-            throw new IllegalArgumentException("Nieporawna liczba zakladow: " + liczbaZakladow);
+            throw new IllegalArgumentException("Niepoprawna liczba zakladow: " + liczbaZakladow);
         }
         if (liczbaLosowan < MIN_LICZBA_LOSOWAN || MAX_LICZBA_LOSOWAN < liczbaLosowan) {
             throw new IllegalArgumentException("Niepoprawna liczba losowan: " + liczbaLosowan);
@@ -99,6 +99,7 @@ public class Kupon {
     public String dajId() { return id;}
     public long dajCene() { return cenaBrutto;}
     public int dajLiczbeLosowan() { return liczbaLosowan;}
+    public int dajNumerOstatniegoLosowania() { return numerPierwszegoLosowania + liczbaLosowan - 1 ;}
     public int dajLiczbeZakladow() { return zaklady.size();}
 
     public List<Zaklad> dajZaklady() { return new ArrayList<>(this.zaklady);}

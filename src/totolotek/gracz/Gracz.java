@@ -1,5 +1,7 @@
 package totolotek.gracz;
 
+import totolotek.domain.Losowanie;
+import totolotek.system.Centrala;
 import totolotek.system.Kupon;
 
 import java.util.ArrayList;
@@ -30,6 +32,29 @@ public abstract class Gracz {
 
     public void wezKupon(Kupon kupon) { kupony.add(kupon);}
 
+    /*
+    Po każdym losowaniu każdy gracz powinien sprawdzić, czy któryś* z jego kuponów ma już
+    wykonane wszystkie losowania. Jeśli tak, i jeśli ten kupon coś wygrał, gracz powinien odebrać wygraną.
+
+    Domyslam sie, ze chodzi o wykonanie takiego sprawdzenia dla kazdego kuponu.
+     */
+
+    public void sprawdzKupony(Losowanie ostatnieLosowanie, Centrala centrala){
+        for (Kupon kupon : kupony) {
+            // to znaczy, ze ostanieLosowanie bylo tez ostatnim losowaniem danego kuponu
+            if (!kupon.sprawdzCzyWyplacony() &&
+                    ostatnieLosowanie.dajNumer() == kupon.dajNumerOstatniegoLosowania()) {
+
+                // mogl wygrac niekoniecznie w tym losowaniu
+                // trzeba dla kazdego zakladu kuponu przejsc po kazdym losowaniu
+                // a co jak wiecej nagrod?
+
+
+                // od razu zbierac ktore losowania i ktore zaklady ??
+
+            }
+        }
+    }
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
