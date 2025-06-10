@@ -4,6 +4,7 @@ package totolotek.app;
 import totolotek.domain.Zaklad;
 import totolotek.gracz.*;
 import totolotek.kolektura.Blankiet;
+import totolotek.system.BudzetPanstwa;
 import totolotek.system.Centrala;
 import totolotek.kolektura.Kolektura;
 
@@ -47,16 +48,33 @@ public class Main {
 
         for (int i = 0; i < 200; i++) {
             wszyscyGracze.add(new Staloblankietowy("a", "b", pesel.toString(),
-                    10000L, wylosujPodzbior(listaKolektur), Blankiet.stworzLosowyPoprawny());
+                    10000L, wylosujPodzbior(listaKolektur), Blankiet.stworzLosowyPoprawny()));
             pesel++;
         }
 
         // Przeprowadzić 20 losowań, poprzedzając każde z nich kupowaniem kuponów przez graczy.
-        // Po każdym losowaniu każdy gracz powinien sprawdzić, czy któryś z jego kuponów ma już wykonane wszystkie losowania. Jeśli tak, i jeśli ten kupon coś wygrał, gracz powinien odebrać wygraną.
+        // Po każdym losowaniu każdy gracz powinien sprawdzić, czy któryś z jego kuponów ma już wykonane wszystkie losowania.
+        // Jeśli tak, i jeśli ten kupon coś wygrał, gracz powinien odebrać wygraną.
+        for (int i = 0; i < 20; i++) {
+
+            for (Gracz gracz : wszyscyGracze) {
+                gracz.wykonajTure(centrala);
+            }
+
+            centrala.przeprowadzLosowanie();
+
+            for (Gracz gracz : wszyscyGracze) {
+                gracz.sprawdzKuponyIOdbierzWygrane(centrala);
+            }
+        }
         // Wypisać na koniec:
         //     pełną informację z centrali o przeprowadzonych losowaniach (p. sekcja Centrala Totolotka);
+        System.out.println(centrala.wypiszWynikiWszystkichLosowan());
         //    dotychczasową wielkość wpływów do budżetu państwa;
+        System.out.println(BudzetPanstwa.dajInstancje().dajPobranePodatkiSuma());
         //    dotychczasową kwotę subwencji pobranej przez centralę z budżetu.
+        System.out.println(BudzetPanstwa.dajInstancje().dajPrzekazaneSubwencjeSuma());
+
     }
 
 

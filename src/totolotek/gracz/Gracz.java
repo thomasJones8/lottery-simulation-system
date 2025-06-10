@@ -25,6 +25,7 @@ public abstract class Gracz {
         this.kupony = new ArrayList<>();
     }
     public long dajPortfel(){ return portfel;}
+    public List<Kupon> dajKupony(){ return new ArrayList<>(kupony);}
     public void zaplac(long kwota) { portfel -= kwota;}
     public void przyjmijWplate(long kwota) { portfel += kwota;}
 
@@ -44,11 +45,11 @@ public abstract class Gracz {
     Domyslam sie, ze chodzi o wykonanie takiego sprawdzenia dla kazdego kuponu.
      */
 
-    public void sprawdzKuponyIOdbierzWygrane(Losowanie ostatnieLosowanie, Centrala centrala){
+    public void sprawdzKuponyIOdbierzWygrane(Centrala centrala){
         for (Kupon kupon : kupony) {
             // to znaczy, ze ostanieLosowanie bylo tez ostatnim losowaniem danego kuponu
             if (!kupon.sprawdzCzyZrealizowany() &&
-                    ostatnieLosowanie.dajNumer() == kupon.dajNumerOstatniegoLosowania()) {
+                    centrala.dajNumerNastepnegoLosowania() - 1 == kupon.dajNumerOstatniegoLosowania()) {
                 Kolektura kolektura = centrala.dajKolekture(kupon.dajIdKolektury());
                 kolektura.zrealizujKupon(this, kupon);
             }

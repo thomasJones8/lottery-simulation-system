@@ -1,12 +1,12 @@
 package totolotek.gracz;
 
+import totolotek.kolektura.Blankiet;
 import totolotek.kolektura.Kolektura;
+import totolotek.kolektura.PoleBlankietu;
 import totolotek.system.Centrala;
 import totolotek.util.Stale;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Staloliczbowy extends Staly{
     public static final int LICZBA_LOSOWAN = 10;
@@ -25,7 +25,15 @@ public class Staloliczbowy extends Staly{
     //Gracz ten kupuje nowy kupon dopiero wtedy, gdy przeprowadzone zostaną wszystkie
     // losowania obstawione w poprzednim kuponie.
     public void wykonajTure(Centrala centrala) {
-
+        // sprawdzamy, czy wszystkie losowania ostatniego kuponu sie odbyly
+        int numerOstaniegoLosowania = centrala.dajNumerNastepnegoLosowania() - 1;
+        if (dajKupony().get(dajKupony().size() - 1).dajNumerOstatniegoLosowania() <=
+                numerOstaniegoLosowania) {
+            Map<Integer, PoleBlankietu> mapa = new HashMap<>();
+            mapa.put(1, new PoleBlankietu(ulubioneLiczby, false));
+            Blankiet blankiet = new Blankiet(mapa, Set.of(LICZBA_LOSOWAN));
+            wybierzNastepnaKolekture().sprzedajKupon(blankiet, this);
+        }
     }
 
 }
