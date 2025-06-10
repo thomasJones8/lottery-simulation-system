@@ -1,6 +1,7 @@
 package totolotek.gracz;
 
 import totolotek.kolektura.Kolektura;
+import totolotek.system.Centrala;
 import totolotek.util.Stale;
 
 import java.util.HashSet;
@@ -20,4 +21,11 @@ public class Staloliczbowy extends Staly{
         }
         this.ulubioneLiczby = new HashSet<>(ulubioneLiczby);
     }
+
+    //Gracz ten kupuje nowy kupon dopiero wtedy, gdy przeprowadzone zostaną wszystkie
+    // losowania obstawione w poprzednim kuponie.
+    public void wykonajTure(Centrala centrala) {
+
+    }
+
 }

@@ -1,6 +1,6 @@
 package totolotek.gracz;
 
-import totolotek.gracz.Gracz;
+import totolotek.system.Centrala;
 import totolotek.kolektura.Kolektura;
 
 public class Minimalista extends Gracz {
@@ -15,8 +15,9 @@ public class Minimalista extends Gracz {
         this.ulubionaKolektura = kolektura;
     }
 
-
-    public void kupKupon() {
+    // minimalista nie potrzebuje centrali, ale zeby symulacja ladniej wyszla,
+    // chce miec takie same argumenty metody dla kazdego gracza
+    public void wykonajTure(Centrala centrala) {
         ulubionaKolektura.sprzedajKupon(ileZakladow, ileLosowan, this);
     }
 

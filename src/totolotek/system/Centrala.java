@@ -215,6 +215,8 @@ public class Centrala {
         return new Kupon(liczbaLosowan, idKolektury, numerNastepnegoKuponu++, listaZakladow,
         cenaBrutto, numerNastepnegoLosowania);
     }
+
+    public List<Kolektura> dajListeKolektur() { return new ArrayList<>(listaKolektur.values());}
     public int dajNumerNastepnegoLosowania() { return numerNastepnegoLosowania;}
     public long dajBudzet() { return budzet;}
     public void pobierzKwote(long kwota) {

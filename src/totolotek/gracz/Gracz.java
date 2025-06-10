@@ -34,6 +34,8 @@ public abstract class Gracz {
 
     public void oddajKupon(Kupon kupon) { kupony.remove(kupon);}
     public void wezKupon(Kupon kupon) { kupony.add(kupon);}
+    public abstract void wykonajTure(Centrala centrala);
+
 
     /*
     Po każdym losowaniu każdy gracz powinien sprawdzić, czy któryś* z jego kuponów ma już

@@ -1,6 +1,7 @@
 package totolotek.gracz;
 
 import totolotek.kolektura.Kolektura;
+import totolotek.system.Centrala;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,7 +28,8 @@ public class Losowy extends Gracz{
         return ThreadLocalRandom.current().nextLong(MAX_POCZATKOWE_SRODKI);
     }
 
-    public void kupKupon(List<Kolektura> listaKolektur) {
+    public void wykonajTure(Centrala centrala) {
+        List<Kolektura> listaKolektur =  centrala.dajListeKolektur();
 
         int ileKuponow = ThreadLocalRandom.current().nextInt(MIN_KUPOWANYCH_KUPONOW, MAX_KUPOWANYCH_KUPONOW) ;
         // indeks do wylosowania kolektury
