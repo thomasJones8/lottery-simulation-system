@@ -23,8 +23,7 @@ public class SprzedazKuponuTestIntegracyjny {
     void przygotowanie() {
         centrala = new Centrala(0);
         kolektura = centrala.stworzKolekture();
-
-        // DODAC RESET BUDZETU 
+        // w przypadku wiekszej liczby testow dodac reset budzetu - wymog singletona
     }
 
     // transakcja nie zaszla - za malo srodkow
@@ -59,6 +58,8 @@ public class SprzedazKuponuTestIntegracyjny {
         assertEquals(Zaklad.PODATEK, BudzetPanstwa.dajInstancje().dajPobranePodatkiSuma());
         // sprzedane kupony NIE powinny byc puste
         assertFalse(kolektura.dajSprzedaneKupony().isEmpty());
+        // gracz powinen miec pusty portfel, bo mial tylko na 1 kupon
+        assertEquals(0, minimalista.dajPortfel());
     }
     
     

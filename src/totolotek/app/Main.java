@@ -77,6 +77,12 @@ public class Main {
         //    dotychczasową kwotę subwencji pobranej przez centralę z budżetu.
         System.out.println(BudzetPanstwa.dajInstancje().wypiszPrzekazaneSubwencjeSuma());
 
+        // tu mozna sprawdzic portfele graczy
+        /*
+        for (Gracz gracz : wszyscyGracze) {
+            System.out.println(gracz.dajPortfel());
+        }
+        */
     }
 
 
