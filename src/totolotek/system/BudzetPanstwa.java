@@ -26,6 +26,7 @@ public class BudzetPanstwa {
         return budzetPanstwa;
     }
 
+    public long dajPobranePodatkiSuma() { return pobranePodatkiSuma;}
     public void pobierzPodatek(long kwota) {
         pobranePodatkiSuma += kwota;
     }

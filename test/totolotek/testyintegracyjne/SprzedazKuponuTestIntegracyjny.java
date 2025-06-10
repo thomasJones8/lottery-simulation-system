@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import totolotek.domain.Zaklad;
 import totolotek.system.BudzetPanstwa;
 import totolotek.system.Centrala;
-import totolotek.util.Stale;
 import totolotek.gracz.Minimalista;
 import totolotek.kolektura.Kolektura;
 

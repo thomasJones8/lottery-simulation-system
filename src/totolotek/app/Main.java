@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+// UWAGA! Wszystkie kwoty podawane sa w groszach!
 public class Main {
     public static void main(String[] args) {
 

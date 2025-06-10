@@ -1,3 +1,8 @@
+poprawic wypisywanie w centrali
+przejrzec specyfikacje
+usunac dziwne kom
+zmienic te metode static co wyszla dziwna
+---
 w centrali static cos tam zmienia
 powinienem weryfikowac numeracje pol w blankiecie
 

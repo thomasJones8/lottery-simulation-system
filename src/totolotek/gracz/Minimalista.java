@@ -18,7 +18,10 @@ public class Minimalista extends Gracz {
     // minimalista nie potrzebuje centrali, ale zeby symulacja ladniej wyszla,
     // chce miec takie same argumenty metody dla kazdego gracza
     public void wykonajTure(Centrala centrala) {
-        ulubionaKolektura.sprzedajKupon(ileZakladow, ileLosowan, this);
+        kupKupon();
     }
 
+    public void kupKupon(){
+        ulubionaKolektura.sprzedajKupon(ileZakladow, ileLosowan, this);
+    }
 }
