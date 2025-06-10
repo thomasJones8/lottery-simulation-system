@@ -1,6 +1,7 @@
 package totolotek.gracz;
 
 import totolotek.domain.Losowanie;
+import totolotek.kolektura.Kolektura;
 import totolotek.system.Centrala;
 import totolotek.system.Kupon;
 
@@ -25,11 +26,13 @@ public abstract class Gracz {
     }
     public long dajPortfel(){ return portfel;}
     public void zaplac(long kwota) { portfel -= kwota;}
+    public void przyjmijWplate(long kwota) { portfel += kwota;}
 
     public boolean czyStac(long kwota) {
         return portfel >= kwota;
     }
 
+    public void oddajKupon(Kupon kupon) { kupony.remove(kupon);}
     public void wezKupon(Kupon kupon) { kupony.add(kupon);}
 
     /*
@@ -39,19 +42,13 @@ public abstract class Gracz {
     Domyslam sie, ze chodzi o wykonanie takiego sprawdzenia dla kazdego kuponu.
      */
 
-    public void sprawdzKupony(Losowanie ostatnieLosowanie, Centrala centrala){
+    public void sprawdzKuponyIOdbierzWygrane(Losowanie ostatnieLosowanie, Centrala centrala){
         for (Kupon kupon : kupony) {
             // to znaczy, ze ostanieLosowanie bylo tez ostatnim losowaniem danego kuponu
-            if (!kupon.sprawdzCzyWyplacony() &&
+            if (!kupon.sprawdzCzyZrealizowany() &&
                     ostatnieLosowanie.dajNumer() == kupon.dajNumerOstatniegoLosowania()) {
-
-                // mogl wygrac niekoniecznie w tym losowaniu
-                // trzeba dla kazdego zakladu kuponu przejsc po kazdym losowaniu
-                // a co jak wiecej nagrod?
-
-
-                // od razu zbierac ktore losowania i ktore zaklady ??
-
+                Kolektura kolektura = centrala.dajKolekture(kupon.dajIdKolektury());
+                kolektura.zrealizujKupon(this, kupon);
             }
         }
     }

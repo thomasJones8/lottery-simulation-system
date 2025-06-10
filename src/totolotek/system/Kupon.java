@@ -1,8 +1,11 @@
 package totolotek.system;
 
+import totolotek.domain.Losowanie;
+import totolotek.domain.StopienNagrody;
 import totolotek.util.Stale;
 import totolotek.domain.Zaklad;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -10,7 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 // ZMIENIC NUMER INDEKSOWY NA LONG?
 public class Kupon {
-    private boolean czyWyplacony;
+    // zrealizowany = sprawdzony (i byc moze wyplacony )
+    private boolean czyZrealizowany;
     private final int idKolektury;
     // musi byc unikatowy w skali systemu!!
     private final int numerPorzadkowy;
@@ -49,7 +53,7 @@ public class Kupon {
             throw new IllegalArgumentException("Niepoprawna liczba losowan: " + liczbaLosowan);
         }
 
-        czyWyplacony = false;
+        czyZrealizowany = false;
         this.idKolektury = idKolektury;
         this.numerPorzadkowy = numerPorzadkowy;
         id = generujId(numerPorzadkowy, idKolektury);
@@ -60,7 +64,31 @@ public class Kupon {
         this.numerPierwszegoLosowania = numerPierwszegoLosowania;
     }
 
-
+    public void oznaczJakoZrealizowany(){ czyZrealizowany = true;};
+    /*
+     przejde po losowaniach, przejde po zakladach, sprawdze, ile liczb jest trafionych
+     i sprawdze wysokosc danej nagrody
+     */
+    public List<Long> obliczWygraneBrutto(Centrala centrala) {
+        List<Long> wygrane = new ArrayList<>();
+        // przejscie po losowaniach
+        for (int i = numerPierwszegoLosowania; i <= this.dajNumerOstatniegoLosowania(); i++) {
+            // dotarlismy do losowania, ktore jeszcze sie nie odbylo
+            if (i >= centrala.dajNumerNastepnegoLosowania()) {
+                break;
+            }
+            Losowanie losowanie = centrala.dajLosowanie(i);
+            for (Zaklad zaklad : this.dajZaklady()) {
+                int ileTrafien = zaklad.ileTrafien(losowanie.dajZwycieskieLiczby());
+                StopienNagrody stopien = StopienNagrody.naPodstawieTrafien(ileTrafien);
+                if (stopien != null) {
+                    // dodaje odpowiednia wygrana do listy
+                    wygrane.add(losowanie.dajWyniki().get(stopien).kwotaNagrody());
+                }
+            }
+        }
+        return wygrane;
+    }
     private String generujId(int numerPorzadkowy, int idKolektury) {
 
         int losowyZnacznik = generujLosowyZnacznik();
@@ -91,12 +119,14 @@ public class Kupon {
         return wynik;
     }
 
-    public boolean sprawdzCzyWyplacony() {return czyWyplacony;}
+    public boolean sprawdzCzyZrealizowany() {return czyZrealizowany;}
     public boolean czyObejmujeLosowanie(int numerLosowania) {
         return numerPierwszegoLosowania <= numerLosowania &&
                 numerLosowania < numerPierwszegoLosowania + liczbaLosowan;
     }
     public String dajId() { return id;}
+    public int dajIdKolektury() { return idKolektury;}
+
     public long dajCene() { return cenaBrutto;}
     public int dajLiczbeLosowan() { return liczbaLosowan;}
     public int dajNumerOstatniegoLosowania() { return numerPierwszegoLosowania + liczbaLosowan - 1 ;}

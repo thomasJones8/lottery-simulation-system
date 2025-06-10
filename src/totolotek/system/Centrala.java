@@ -6,7 +6,6 @@ import totolotek.domain.WynikStopnia;
 import totolotek.domain.Zaklad;
 import totolotek.kolektura.Kolektura;
 
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static java.lang.Math.max;
@@ -37,7 +36,7 @@ public class Centrala {
     private int numerNastepnejKolektury;
     private long budzet;
 
-    private final List<Kolektura> listaKolektur;
+    private final Map<Integer, Kolektura> listaKolektur;
     private final Map<Integer, Losowanie> losowania;
 
     public Centrala(long budzetPoczatkowy) {
@@ -46,7 +45,7 @@ public class Centrala {
         numerNastepnegoLosowania = 1;
         numerNastepnegoKuponu = 1;
         numerNastepnejKolektury = 1;
-        listaKolektur = new ArrayList<>();
+        listaKolektur = new HashMap<>();
         losowania = new HashMap<>();
     }
 
@@ -143,11 +142,11 @@ public class Centrala {
         EnumMap<StopienNagrody, Integer> trafienia = new EnumMap<>(StopienNagrody.class);
 
 
-        for (Kolektura kolektura: listaKolektur) {
+        for (Kolektura kolektura: listaKolektur.values()) {
             // petla po wszystkich kuponach sprzedanych przez kolekture
             for (Kupon kupon : kolektura.dajSprzedaneKupony().values()) {
                 // czy ten kupon obejmuje to losowanie && niewyplacony
-                if (!kupon.sprawdzCzyWyplacony() && kupon.czyObejmujeLosowanie(numerLosowania)) {
+                if (!kupon.sprawdzCzyZrealizowany() && kupon.czyObejmujeLosowanie(numerLosowania)) {
                     // petla po wszystkich kuponach
                     for (Zaklad zaklad : kupon.dajZaklady()) {
                         StopienNagrody stopien = StopienNagrody.naPodstawieTrafien(zaklad.ileTrafien(zwycieskieLiczby));
@@ -165,13 +164,22 @@ public class Centrala {
         return trafienia;
     }
 
+    public void zaplac(long kwota) {
+        if (kwota > dajBudzet()) {
+            // pobierz subwencje
+            long kwotaSubwencji = kwota - dajBudzet();
+            pobierzKwote(kwotaSubwencji);
+            BudzetPanstwa.dajInstancje().przekazSubwencje(kwotaSubwencji);
+        }
+        budzet -= kwota;
+    }
 
     // przechodzi po wszystkich kolekturach, po ich kuponach, sprawdza ktore
     // liczyly sie na to losowanie i dodaje ich ceny NETTO do puli
     private long obliczPuleNaNagrody(int numerLosowania){
         long wynik = 0;
 
-        for (Kolektura kolektura: listaKolektur) {
+        for (Kolektura kolektura: listaKolektur.values()) {
             // petla po wszystkich kuponach sprzedanych przez kolekture
             for (Kupon kupon : kolektura.dajSprzedaneKupony().values()) {
                 // czy ten kupon obejmuje to losowanie
@@ -186,7 +194,7 @@ public class Centrala {
 
     public Kolektura stworzKolekture() {
         Kolektura kolektura = new Kolektura(numerNastepnejKolektury++, this);
-        listaKolektur.add(kolektura);
+        listaKolektur.put(kolektura.dajId(), kolektura);
         return kolektura;
     }
     public Kupon stworzKupon(int liczbaLosowan, int idKolektury, List<Zaklad> listaZakladow,
@@ -196,9 +204,13 @@ public class Centrala {
     }
     public int dajNumerNastepnegoLosowania() { return numerNastepnegoLosowania;}
     public long dajBudzet() { return budzet;}
-    public void pobierzZysk(long kwota) {
+    public void pobierzKwote(long kwota) {
         budzet += kwota;
     }
+
+    // zwrocone Losowanie bedzie niemutowalne - sama klasa losowanie o to dba
+    public Losowanie dajLosowanie(int numerLosowania) {return losowania.get(numerLosowania);}
+    public Kolektura dajKolekture(int idKolektury) {return listaKolektur.get(idKolektury);}
 
     public String wypiszWynikiWszystkichLosowan() {
         StringBuilder s = new StringBuilder();

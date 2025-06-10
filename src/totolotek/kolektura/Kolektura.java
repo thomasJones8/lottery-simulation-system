@@ -1,7 +1,6 @@
 package totolotek.kolektura;
 
 import totolotek.system.BudzetPanstwa;
-import totolotek.util.Stale;
 import totolotek.domain.Zaklad;
 import totolotek.gracz.Gracz;
 
@@ -14,6 +13,11 @@ public class Kolektura {
     private int id;
     private Map<String, Kupon> sprzedaneKupony;
     private Centrala centrala;
+
+    public static final long PROG_PODATEK_NAGRODA = 228000L;
+    public static final int PROCENT_PODATEK_NAGRODA = 10;
+
+
 
     // nie mam budzetu panstwa jako zmiennej, bo bp implementuje zgodnie
     // ze wzorcem Singleton (vide BudzetPanstwa.java)
@@ -74,6 +78,44 @@ public class Kolektura {
         return false;
     }
 
+    public void zrealizujKupon(Gracz gracz, Kupon kupon) {
+        // wstepna weryfikacja
+        if (kupon.dajIdKolektury() == id && !kupon.sprawdzCzyZrealizowany()) {
+            long calkowitaWygranaNetto = 0;
+            long calkowityPodatek = 0;
+
+            // oblicz wygrana kwote netto i podatek
+            for (long wygranaZakladuBrutto : kupon.obliczWygraneBrutto(centrala)) {
+                if (wygranaZakladuBrutto >= PROG_PODATEK_NAGRODA) {
+                    long podatekZakladu = (wygranaZakladuBrutto * PROCENT_PODATEK_NAGRODA) / 100;
+                    calkowityPodatek += podatekZakladu;
+                    calkowitaWygranaNetto += wygranaZakladuBrutto - podatekZakladu;
+                }
+                else {
+                    calkowitaWygranaNetto += wygranaZakladuBrutto;
+                }
+            }
+
+                /*
+                Tu pojawia sie drobna niezrecznosc: moze nastapic lekko kuriozalna sytuacja,
+                w ktorej cetnrali nie stac na podatek, wiec bierze subwencje od panstwa, po czym
+                od razu zwraca ja w formie podatku.
+                Jednak wydaje mi sie, ze tak to ma dzialac, ze nie nalezy zbytnio scalac
+                logiki subwencji i podatkow, a budzet panstwa i tak jest w tym zadaniu fantomowy.
+                 */
+
+                centrala.zaplac(calkowityPodatek + calkowitaWygranaNetto);
+                // przekaz podatek
+                BudzetPanstwa.dajInstancje().pobierzPodatek(calkowityPodatek);
+                // przekaz nagrode
+                gracz.przyjmijWplate(calkowitaWygranaNetto);
+                // oznacz kupon jako zrealizowany, zniszcz graczowi
+                kupon.oznaczJakoZrealizowany();
+                gracz.oddajKupon(kupon);
+            }
+        }
+
+
     private void dokonczSprzedaz(Gracz gracz, Kupon kupon) {
         long cenaKuponuBrutto = kupon.dajCene();
         long kwotaPodatku = kupon.dajPodatek();
@@ -81,7 +123,7 @@ public class Kolektura {
         BudzetPanstwa.dajInstancje().pobierzPodatek(kwotaPodatku);
         // przekazanie zysku
         long zysk = cenaKuponuBrutto - kwotaPodatku;
-        centrala.pobierzZysk(zysk);
+        centrala.pobierzKwote(zysk);
         // dodanie go do sprzedanych
         sprzedaneKupony.put(kupon.dajId(), kupon);
         // przekazanie graczowi

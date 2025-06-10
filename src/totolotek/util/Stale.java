@@ -10,8 +10,6 @@ public final class Stale {
     public static final int MIN_LOSOWANY_NUMER = 1;
     public static final int MAX_LOSOWANY_NUMER = 49;
     public static final int SZESC_LICZB_W_ZAKLADZIE = 6;
-    public static final long PROG_PODATEK_NAGRODA = 228000L;
-    public static final int PROCENT_PODATEK_NAGRODA = 10;
 
     public static final int MAX_LOSOWAN_BLANKIET = 10;
     public static final int DOMYSLNA_LICZBA_LOSOWAN_BLANKIET = 1;
