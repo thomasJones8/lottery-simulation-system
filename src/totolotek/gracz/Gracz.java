@@ -7,6 +7,7 @@ import totolotek.system.Kupon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 public abstract class Gracz {
 
     // rozwazalem uczynienie imienia i nazwiska final, ale, choc rzadko, to mozna je przeciez zmienic...
@@ -46,12 +47,15 @@ public abstract class Gracz {
      */
 
     public void sprawdzKuponyIOdbierzWygrane(Centrala centrala){
-        for (Kupon kupon : kupony) {
+        Iterator<Kupon> iterator = this.kupony.iterator();
+        while (iterator.hasNext()) {
+            Kupon kupon = iterator.next();
             // to znaczy, ze ostanieLosowanie bylo tez ostatnim losowaniem danego kuponu
             if (!kupon.sprawdzCzyZrealizowany() &&
                     centrala.dajNumerNastepnegoLosowania() - 1 == kupon.dajNumerOstatniegoLosowania()) {
                 Kolektura kolektura = centrala.dajKolekture(kupon.dajIdKolektury());
                 kolektura.zrealizujKupon(this, kupon);
+                iterator.remove();
             }
         }
     }
