@@ -1,9 +1,6 @@
 package totolotek.domain;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Losowanie {
     private final int numerLosowania;
@@ -19,7 +16,7 @@ public class Losowanie {
     public int dajNumer() { return numerLosowania;}
     public Set<Integer> dajZwycieskieLiczby() { return zwycieskieLiczby;};
 
-    public Map<StopienNagrody, WynikStopnia> dajWyniki() { return new EnumMap<>(StopienNagrody.class);}
+    public Map<StopienNagrody, WynikStopnia> dajWyniki() { return Collections.unmodifiableMap(this.wyniki);}
 
 
 

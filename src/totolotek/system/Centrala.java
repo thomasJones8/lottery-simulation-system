@@ -85,7 +85,7 @@ public class Centrala {
         Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>(StopienNagrody.class);
         // ustalam wyniki : IV, I i II stopnia
         wyniki.put(StopienNagrody.IV_STOPIEN, obliczWynik4Stopnia(trafienia.getOrDefault(StopienNagrody.IV_STOPIEN, 0)));
-        wyniki.put(I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0), this));
+        wyniki.put(StopienNagrody.I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0), this));
         wyniki.put(StopienNagrody.II_STOPIEN, obliczWynikIIStopnia(calkowitaPula,
                 trafienia.getOrDefault(StopienNagrody.II_STOPIEN, 0)));
         // od calkowitej puli odejmuje pozostale nagrody, aby obliczyc wynik III stopnia

@@ -2,6 +2,7 @@ package totolotek.system;
 
 import totolotek.domain.Losowanie;
 import totolotek.domain.StopienNagrody;
+import totolotek.domain.WynikStopnia;
 import totolotek.util.Stale;
 import totolotek.domain.Zaklad;
 
@@ -70,9 +71,9 @@ public class Kupon {
      i sprawdze wysokosc danej nagrody
      */
     public List<Long> obliczWygraneBrutto(Centrala centrala) {
-        List<Long> wygrane = new ArrayList<>();
-        // przejscie po losowaniach
-        for (int i = numerPierwszegoLosowania; i <= this.dajNumerOstatniegoLosowania(); i++) {
+            List<Long> wygrane = new ArrayList<>();
+            // przejscie po losowaniach
+            for (int i = numerPierwszegoLosowania; i <= this.dajNumerOstatniegoLosowania(); i++) {
             // dotarlismy do losowania, ktore jeszcze sie nie odbylo
             if (i >= centrala.dajNumerNastepnegoLosowania()) {
                 break;
@@ -83,7 +84,8 @@ public class Kupon {
                 StopienNagrody stopien = StopienNagrody.naPodstawieTrafien(ileTrafien);
                 if (stopien != null) {
                     // dodaje odpowiednia wygrana do listy
-                    wygrane.add(losowanie.dajWyniki().get(stopien).kwotaNagrody());
+                    WynikStopnia wynik = losowanie.dajWyniki().get(stopien);
+                    wygrane.add(wynik.kwotaNagrody());
                 }
             }
         }

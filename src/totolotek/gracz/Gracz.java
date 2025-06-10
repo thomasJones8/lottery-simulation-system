@@ -34,7 +34,6 @@ public abstract class Gracz {
         return portfel >= kwota;
     }
 
-    public void oddajKupon(Kupon kupon) { kupony.remove(kupon);}
     public void wezKupon(Kupon kupon) { kupony.add(kupon);}
     public abstract void wykonajTure(Centrala centrala);
 

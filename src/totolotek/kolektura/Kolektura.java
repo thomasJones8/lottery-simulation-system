@@ -111,7 +111,6 @@ public class Kolektura {
                 gracz.przyjmijWplate(calkowitaWygranaNetto);
                 // oznacz kupon jako zrealizowany, zniszcz graczowi
                 kupon.oznaczJakoZrealizowany();
-                gracz.oddajKupon(kupon);
             }
         }
 

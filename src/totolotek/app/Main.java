@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-// CHYBA POWINNO BYC W INNYM KATALOGU
 public class Main {
     public static void main(String[] args) {
 
         //     Utworzyć centralę Totolotka i 10 kolektur.
         Centrala centrala = new Centrala(0);
+
         ArrayList<Kolektura> listaKolektur = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             listaKolektur.add(centrala.stworzKolekture());
@@ -71,9 +71,10 @@ public class Main {
         //     pełną informację z centrali o przeprowadzonych losowaniach (p. sekcja Centrala Totolotka);
         System.out.println(centrala.wypiszWynikiWszystkichLosowan());
         //    dotychczasową wielkość wpływów do budżetu państwa;
-        System.out.println(BudzetPanstwa.dajInstancje().dajPobranePodatkiSuma());
+        System.out.println(BudzetPanstwa.dajInstancje().wypiszPobranePodatkiSuma());
+
         //    dotychczasową kwotę subwencji pobranej przez centralę z budżetu.
-        System.out.println(BudzetPanstwa.dajInstancje().dajPrzekazaneSubwencjeSuma());
+        System.out.println(BudzetPanstwa.dajInstancje().wypiszPrzekazaneSubwencjeSuma());
 
     }
 

@@ -29,17 +29,16 @@ public class BudzetPanstwa {
     public void pobierzPodatek(long kwota) {
         pobranePodatkiSuma += kwota;
     }
-    public long dajPobranePodatkiSuma() {
-        return pobranePodatkiSuma;
+    public String wypiszPobranePodatkiSuma() {
+        return "Pobrane podatki: " + pobranePodatkiSuma;
     }
 
 
     public void przekazSubwencje(long kwota) {
         przekazaneSubwencjeSuma += kwota;
     }
-    public long dajPrzekazaneSubwencjeSuma() {
-        return przekazaneSubwencjeSuma;
+    public String wypiszPrzekazaneSubwencjeSuma() {
+        return "Przekazane subwencje: " + przekazaneSubwencjeSuma;
     }
-
 
 }
