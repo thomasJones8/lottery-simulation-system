@@ -1,6 +1,5 @@
 package totolotek.gracz;
 
-import totolotek.domain.Losowanie;
 import totolotek.kolektura.Kolektura;
 import totolotek.system.Centrala;
 import totolotek.system.Kupon;
@@ -16,7 +15,7 @@ public abstract class Gracz {
     private final String pesel;
     private long portfel;
 
-    private List<Kupon> kupony;
+    private final List<Kupon> kupony;
 
     public Gracz(String imie, String nazwisko, String pesel, long poczatkoweSrodki) {
         this.imie = imie;

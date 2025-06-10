@@ -17,7 +17,6 @@ public class Blankiet {
 
     public static final int LICZBA_POL_BLANKIET = 8;
 
-    // czy na pewno publiczny? chyba tak, bo gracz tworzy
     public Blankiet(Map<Integer, PoleBlankietu> pola, Set<Integer> zaznaczoneLiczbyLosowan) throws IllegalArgumentException {
         this.pola = new HashMap<>(pola);
         this.liczbaLosowan = Blankiet.obliczLiczbeLosowan(zaznaczoneLiczbyLosowan);

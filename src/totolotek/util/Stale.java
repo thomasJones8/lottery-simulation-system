@@ -1,6 +1,9 @@
 package totolotek.util;
 
 // klasa na stale - zapobieganie magic numbers
+// w trakcie pisania zmienilem koncepcje na przerzucanie stalych do klas
+// chcialem przetestowac obie opje, i chyba trzymanie w klasach jest lepsze
+// bardziej obiektowe
 public final class Stale {
     // prywatny konstruktor aby nikt nie tworzyl
     private Stale(){}

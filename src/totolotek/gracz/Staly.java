@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class Staly extends Gracz{
 
-    // specyfikacja nic nie mowi, o nie zmienianiu tej listy, a wiec nie ustawiam jej na final
+    // specyfikacja nic nie mowi o nie zmienianiu tej listy, a wiec nie ustawiam jej na final
     public static final int MIN_ULUBIONYCH_KOLEKTUR = 1;
     private List<Kolektura> ulubioneKolektury;
     // przechowuje indeks kolektury, z ktorej bedzie najblizszy zakup

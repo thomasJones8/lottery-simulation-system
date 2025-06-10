@@ -14,7 +14,7 @@ public class Losowanie {
     }
 
     public int dajNumer() { return numerLosowania;}
-    public Set<Integer> dajZwycieskieLiczby() { return zwycieskieLiczby;};
+    public Set<Integer> dajZwycieskieLiczby() { return zwycieskieLiczby;}
 
     public Map<StopienNagrody, WynikStopnia> dajWyniki() { return Collections.unmodifiableMap(this.wyniki);}
 

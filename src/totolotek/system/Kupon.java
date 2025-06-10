@@ -11,20 +11,16 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-// ZMIENIC NUMER INDEKSOWY NA LONG?
 public class Kupon {
     // zrealizowany = sprawdzony (i byc moze wyplacony )
     private boolean czyZrealizowany;
     private final int idKolektury;
-    // musi byc unikatowy w skali systemu!!
     private final int numerPorzadkowy;
     private final String id;
-    // maks bodajze 8 !!
     private final List<Zaklad> zaklady;
 
     private final long cenaBrutto;
     private final long podatek;
-    // jakos info ile losowan i w ktorych, i ile zakladow?
 
     private final int numerPierwszegoLosowania;
     private final int liczbaLosowan;
@@ -41,7 +37,6 @@ public class Kupon {
         zeby sprawdzic, czy gracza na nie stac.
     */
 
-    // NIE WIEM, CZY POWINIEN BYC PUBLICZNY, BYC MOZE ZMIENIC PAKIET
     Kupon(int liczbaLosowan,int idKolektury, int numerPorzadkowy, List<Zaklad> listaZakladow,
           long cenaBrutto, int numerPierwszegoLosowania) throws IllegalArgumentException {
         int liczbaZakladow = listaZakladow.size();
@@ -105,8 +100,6 @@ public class Kupon {
     }
 
     // potrzebne do sumy kontrolnej w id kuponu
-
-
     private static int sumaCyfr(int x) {
         // u nas nie bedzie takiej sytuacji, ale wydaje mi sie, ze dobra praktyke jest
         // tworzenie od razu bardziej uniwersalnej metody, gdy jest to tak proste
@@ -136,14 +129,19 @@ public class Kupon {
     public List<Zaklad> dajZaklady() { return new ArrayList<>(this.zaklady);}
     public long dajPodatek() { return podatek;}
 
-    // UWAGA !! TO STRING NIEDOKOCZNONY
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("KUPON NR " + id + "\n");
-        // petla
+        for (int i = 0; i < dajLiczbeZakladow(); i++) {
+            s.append((i + 1) + ":" + zaklady.get(i).toString());
+        }
         s.append("LICZBA LOSOWAŃ: " + liczbaLosowan + "\n");
-        // numery loosowan
+        s.append("NUMERY LOSOWAN:" + "\n");
+        for (int i = numerPierwszegoLosowania; i <= dajNumerOstatniegoLosowania(); i++) {
+            s.append(" " + i);
+        }
+        s.append("\n");
         s.append("CENA: " + cenaBrutto + "\n");
 
         return s.toString();

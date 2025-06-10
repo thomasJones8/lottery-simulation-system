@@ -19,7 +19,7 @@ public class Kolektura {
 
 
 
-    // nie mam budzetu panstwa jako zmiennej, bo bp implementuje zgodnie
+    // nie mam budzetu panstwa jako zmiennej, go implementuje zgodnie
     // ze wzorcem Singleton (vide BudzetPanstwa.java)
 
 
@@ -36,10 +36,7 @@ public class Kolektura {
 
     public int dajId() { return id;}
 
-    /*
-        bez blankietu : sprawdza czy stac gracza, jak go
-        stac to generuje zaklady i wywoluje prywatna metode dokoncz sprzedaz
-     */
+
     public static List<Zaklad> generujZakladyChybilTrafil(int ile) {
         ArrayList<Zaklad> lista = new ArrayList<Zaklad>();
         for (int i = 0; i < ile; i++) {
@@ -48,7 +45,11 @@ public class Kolektura {
         return lista;
     }
 
-    // sprzedaje kupon chybil-trafil
+
+    /*
+       sprzedaje kupon chybil-trafil,  bez blankietu : sprawdza czy stac gracza, jak go
+        stac to generuje zaklady i wywoluje prywatna metode dokoncz sprzedaz
+     */
     public boolean sprzedajKupon(int liczbaZakladow, int liczbaLosowan, Gracz gracz) {
         long cenaKuponuBrutto = Zaklad.CENA_BRUTTO * liczbaZakladow * liczbaLosowan;
         // zachodzi tylko jak gracza stac

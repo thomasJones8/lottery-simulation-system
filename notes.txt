@@ -9,15 +9,10 @@ testy:
 blankiet - git, ale ze 2 testy mozna by dodac, chbya ze sa w polu
 kupon: same
 
-
 ---
 w centrali static cos tam zmienia
 powinienem weryfikowac numeracje pol w blankiecie
 
-Informacja o zwycięskiej szóstce,
-puli nagród I stopnia i kwotach wygranych każdego stopnia (tylko tych trafionych) muszą być dostępne publicznie
-
-Popraw wypisywanie w mainie
 
 
 usun dziwne komentarze

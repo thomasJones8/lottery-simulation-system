@@ -13,12 +13,6 @@ import static totolotek.domain.StopienNagrody.I_STOPIEN;
 
 
 
-
-/*
-mam enum stopien nagrody, record wynik stopnia i mape ktora wiaze jedno z drugim?
-
-*/
-
 public class Centrala {
 
     public static final int PROCENT_NA_NAGRODY = 51;
@@ -41,7 +35,8 @@ public class Centrala {
 
     public Centrala(long budzetPoczatkowy) {
         budzet = budzetPoczatkowy;
-        // myslalem, zeby stworzyc na to stala, ale to chyba przesada ;))
+        // myslalem, zeby stworzyc na te 1 stale, ale to chyba przesada ;))
+        // zaszkodiloby czytelnosc
         numerNastepnegoLosowania = 1;
         numerNastepnegoKuponu = 1;
         numerNastepnejKolektury = 1;
@@ -108,7 +103,7 @@ public class Centrala {
             }
             // nie ma wygranych - chcemy uniknac dzielenia przez 0
             else  {
-                nowyWynik1Stopien = new WynikStopnia(0, staryWynik1Stopien.liczbaZwycieskichZakladow(),
+                nowyWynik1Stopien = new WynikStopnia(0, 0,
                         MIN_PULA_1_STOPIEN);
             }
 
@@ -126,7 +121,7 @@ public class Centrala {
         return new WynikStopnia((liczbaTrafien > 0) ? mojaPula/ liczbaTrafien : 0,
                 liczbaTrafien, mojaPula);
     }
-    private static WynikStopnia obliczWynikIStopniaZKumulacja(long calkowitaPula, int liczbaTrafien, Centrala centrala) {
+    private WynikStopnia obliczWynikIStopniaZKumulacja(long calkowitaPula, int liczbaTrafien, Centrala centrala) {
         long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100 + centrala.dajKumulacje();
         // zabezpieczenie przed dzieleniem przez 0
         // jak ktos trafil to zeruj kumulacje
@@ -134,13 +129,12 @@ public class Centrala {
             centrala.ustawKumulacje(0);
             return new WynikStopnia((mojaPula/ liczbaTrafien), liczbaTrafien, mojaPula);
         }
-        //jak nikt to ustaw na aktualna pule (ktora juz ma wliczone stare kumulacje)
+        //jak nikt nie trafil to ustaw na aktualna pule (ktora juz ma wliczone stare kumulacje)
         else {
             centrala.ustawKumulacje(mojaPula);
             return new WynikStopnia(0, liczbaTrafien, mojaPula);
         }
     }
-    // uwzglednia kumulacje
 
     private static WynikStopnia obliczWynikIIStopnia(long calkowitaPula, int liczbaTrafien) {
         long mojaPula = (calkowitaPula * PROCENT_NA_2_STOPIEN) / 100;
@@ -207,7 +201,6 @@ public class Centrala {
                 }
             }
         }
-        // pamietaj ze ceny netto!
         return (wynik * PROCENT_NA_NAGRODY) / 100;
     }
 
@@ -234,15 +227,13 @@ public class Centrala {
     public Losowanie dajLosowanie(int numerLosowania) {return losowania.get(numerLosowania);}
     public Kolektura dajKolekture(int idKolektury) {return listaKolektur.get(idKolektury);}
 
+    public String wypiszBudzet() {return "" + dajBudzet();}
     public String wypiszWynikiWszystkichLosowan() {
         StringBuilder s = new StringBuilder();
         for (Losowanie losowanie : losowania.values()) {
             for (WynikStopnia wynik : losowanie.dajWyniki().values()) {
-                // POTENCJALNIE ZMIENIC - TAK, BY NIE OMIJAL NIETRAFIONYCH
-                if (wynik.liczbaZwycieskichZakladow() != 0) {
-                    s.append(wynik.toString());
-                    s.append("\n");
-                }
+                s.append(wynik.toString());
+                s.append("\n");
             }
             s.append("\n");
         }
