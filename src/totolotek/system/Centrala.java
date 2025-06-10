@@ -35,6 +35,7 @@ public class Centrala {
     private int numerNastepnegoKuponu;
     private int numerNastepnejKolektury;
     private long budzet;
+    private long kumulacja;
 
     private final Map<Integer, Kolektura> listaKolektur;
     private final Map<Integer, Losowanie> losowania;
@@ -47,6 +48,7 @@ public class Centrala {
         numerNastepnejKolektury = 1;
         listaKolektur = new HashMap<>();
         losowania = new HashMap<>();
+        kumulacja = 0;
     }
 
     /*
@@ -81,17 +83,18 @@ public class Centrala {
     private Map<StopienNagrody, WynikStopnia> wyznaczNagrody(int numerLosowania, EnumMap<StopienNagrody,
             Integer> trafienia, long calkowitaPula) {
         Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>(StopienNagrody.class);
-        //najpierw 4 stopien
-        //long pula4Stopien = trafienia.getOrDefault(StopienNagrody.4_STOPIEN, 0) * NAGRODA_4_STOPNIA;
+        // ustalam wyniki : IV, I i II stopnia
         wyniki.put(StopienNagrody.IV_STOPIEN, obliczWynik4Stopnia(trafienia.getOrDefault(StopienNagrody.IV_STOPIEN, 0)));
-        wyniki.put(I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0)));
+        wyniki.put(I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0), this));
         wyniki.put(StopienNagrody.II_STOPIEN, obliczWynikIIStopnia(calkowitaPula,
                 trafienia.getOrDefault(StopienNagrody.II_STOPIEN, 0)));
-        // od calkowitej puli odejmij pule pierwszych 3 nagrod
+        // od calkowitej puli odejmuje pozostale nagrody, aby obliczyc wynik III stopnia
         long resztaPuli = calkowitaPula - wyniki.values().stream().mapToLong(WynikStopnia::lacznaPulaNagrod).sum();
         wyniki.put(StopienNagrody.III_STOPIEN, obliczWynikIIIStopnia(resztaPuli,
                 trafienia.getOrDefault(StopienNagrody.III_STOPIEN, 0)));
-        // dopiero teraz uwzgledniamy minimum puli 1 stopnia, aby nie uszczuplilo puli 3 stopnia
+        // dopiero teraz uwzgledniamy minimum puli 1 stopnia, aby nie uszczuplilo puli III stopnia
+        // nie jest to dokladnie opisane w specyfikacji, ale zakladam, ze logiczne jest, ze
+        // kumulacje uwzgledniamy przed uwzglednieniem minimum 2mln
         WynikStopnia staryWynik1Stopien = wyniki.get(I_STOPIEN);
         WynikStopnia nowyWynik1Stopien;
         if (staryWynik1Stopien.lacznaPulaNagrod() < MIN_PULA_1_STOPIEN) {
@@ -115,12 +118,22 @@ public class Centrala {
         return wyniki;
     }
 
-    // TRZEBA JESZCZE UWZGLEDNIC KUMULACJE!
-    private static WynikStopnia obliczWynikIStopnia(long calkowitaPula, int liczbaTrafien) {
-        long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100;
+    // uwzglednia kumulacje
+    private static WynikStopnia obliczWynikIStopnia(long calkowitaPula, int liczbaTrafien, Centrala centrala) {
+        long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100 + centrala.dajKumulacje();
         // zabezpieczenie przed dzieleniem przez 0
-        return new WynikStopnia((liczbaTrafien > 0) ? mojaPula/ liczbaTrafien : 0,
-                liczbaTrafien, mojaPula);
+
+        // jak ktos trafil to zeruj kumulacje
+        if (liczbaTrafien > 0) {
+            centrala.ustawKumulacje(0);
+            return new WynikStopnia((mojaPula/ liczbaTrafien), liczbaTrafien, mojaPula);
+        }
+        //jak nikt to ustaw na aktualna pule (ktora juz ma wliczone stare kumulacje)
+        else {
+            centrala.ustawKumulacje(mojaPula);
+            return new WynikStopnia(0, liczbaTrafien, mojaPula);
+        }
+
     }
 
     private static WynikStopnia obliczWynikIIStopnia(long calkowitaPula, int liczbaTrafien) {
@@ -207,7 +220,8 @@ public class Centrala {
     public void pobierzKwote(long kwota) {
         budzet += kwota;
     }
-
+    public long dajKumulacje() {return kumulacja;}
+    public void ustawKumulacje(long kwota) {kumulacja = kwota;}
     // zwrocone Losowanie bedzie niemutowalne - sama klasa losowanie o to dba
     public Losowanie dajLosowanie(int numerLosowania) {return losowania.get(numerLosowania);}
     public Kolektura dajKolekture(int idKolektury) {return listaKolektur.get(idKolektury);}

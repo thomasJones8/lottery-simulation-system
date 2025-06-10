@@ -1,3 +1,21 @@
+Informacja o zwycięskiej szóstce,
+puli nagród I stopnia i kwotach wygranych każdego stopnia (tylko tych trafionych) muszą być dostępne publicznie
+
+nadpisywanie equals i hashcode - czy intellij powie?
+usun dziwne komentarze
+
+
+co zostalo:
+kumulacja
+staloblankietowy
+staloliczbowy
+testy
+
+zakladam , ze :
+kumulacje sie stackuje
+obsluguje kumulacje przed minnimum 2mln
+
+-----
 jak obslugiwac magic numbers?
 a jak wyjatki?
 mamy nie korzystac z double, a podatek jest 0,60 + Przy wszelkiego rodzaju obliczeniach procentowych oraz przy podziale puli między graczy, jeśli wychodzi niecałkowita liczba groszy, w tym zadaniu należy zaokrąglić w dół do pełnego grosza.
