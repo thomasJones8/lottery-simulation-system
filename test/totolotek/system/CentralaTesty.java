@@ -82,8 +82,25 @@ public class CentralaTesty {
                 wyniki.get(I_STOPIEN));
     }
 
+
     @Test
     void testMinimum3Puli() {
+        centrala = new Centrala(0);
+        EnumMap<StopienNagrody, Integer> trafienia = new EnumMap<>(StopienNagrody.class);
+        trafienia.put(I_STOPIEN, 0);
+        //trafienia.put(II_STOPIEN, 0);
+        trafienia.put(III_STOPIEN, 400);
+        trafienia.put(IV_STOPIEN, 0);
+        Map<StopienNagrody, WynikStopnia> wyniki = centrala.wyznaczNagrody(trafienia, 1_000_000L);
+
+
+        assertEquals(new WynikStopnia(3600L, 400, 3600 * 400),
+                wyniki.get(III_STOPIEN));
+    }
+
+
+    @Test
+    void testMinimum3PuliTrudniejszy() {
         centrala = new Centrala(0);
         EnumMap<StopienNagrody, Integer> trafienia = new EnumMap<>(StopienNagrody.class);
         trafienia.put(I_STOPIEN, 1);
@@ -93,7 +110,7 @@ public class CentralaTesty {
         Map<StopienNagrody, WynikStopnia> wyniki = centrala.wyznaczNagrody(trafienia, 10_000_000_00L);
 
 
-        assertEquals(new WynikStopnia(477_600_000L, 200_000, 3600L),
+        assertEquals(new WynikStopnia(3600L, 200_000, 3600 * 200_000),
                 wyniki.get(III_STOPIEN));
     }
 

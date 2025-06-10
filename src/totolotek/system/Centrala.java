@@ -25,7 +25,7 @@ public class Centrala {
     public static final long NAGRODA_4_STOPNIA = 2400L;
     public static final long MIN_PULA_1_STOPIEN = 200000000L;
 
-    public static final long MIN_NAGRODA_3_STOPIEN = Zaklad.CENA_NETTO * 36;
+    public static final long MIN_NAGRODA_3_STOPIEN = Zaklad.CENA_NETTO * 15;
     public static final int PROCENT_NA_1_STOPIEN = 44;
 
     public static final int PROCENT_NA_2_STOPIEN = 8;
@@ -84,20 +84,19 @@ public class Centrala {
             Integer> trafienia, long calkowitaPula) {
         Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>(StopienNagrody.class);
         // ustalam wyniki : IV, I i II stopnia
-        long kumulacja = dajKumulacje();
         wyniki.put(StopienNagrody.IV_STOPIEN, obliczWynik4Stopnia(trafienia.getOrDefault(StopienNagrody.IV_STOPIEN, 0)));
-        wyniki.put(StopienNagrody.I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0), this));
+        wyniki.put(StopienNagrody.I_STOPIEN, obliczWynikIStopniaBezKumulacji(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0), this));
         wyniki.put(StopienNagrody.II_STOPIEN, obliczWynikIIStopnia(calkowitaPula,
                 trafienia.getOrDefault(StopienNagrody.II_STOPIEN, 0)));
         // od calkowitej puli odejmuje pozostale nagrody, aby obliczyc wynik III stopnia
-        // dodaje kumulacje, zeby wyrownac jej odjecie (bo jest czescia I stopnia)
-        long resztaPuli = calkowitaPula - wyniki.values().stream().mapToLong(WynikStopnia::lacznaPulaNagrod).sum()
-                + ((dajKumulacje() == 0) ? kumulacja : 0);
+        long resztaPuli = calkowitaPula - wyniki.values().stream().mapToLong(WynikStopnia::lacznaPulaNagrod).sum();
         wyniki.put(StopienNagrody.III_STOPIEN, obliczWynikIIIStopnia(resztaPuli,
                 trafienia.getOrDefault(StopienNagrody.III_STOPIEN, 0)));
         // dopiero teraz uwzgledniamy minimum puli 1 stopnia, aby nie uszczuplilo puli III stopnia
         // nie jest to dokladnie opisane w specyfikacji, ale zakladam, ze logiczne jest, ze
         // kumulacje uwzgledniamy przed uwzglednieniem minimum 2mln
+        wyniki.put(StopienNagrody.I_STOPIEN, obliczWynikIStopniaZKumulacja(calkowitaPula,
+                trafienia.getOrDefault(I_STOPIEN, 0), this));
         WynikStopnia staryWynik1Stopien = wyniki.get(I_STOPIEN);
         WynikStopnia nowyWynik1Stopien;
         if (staryWynik1Stopien.lacznaPulaNagrod() < MIN_PULA_1_STOPIEN) {
@@ -121,7 +120,13 @@ public class Centrala {
         return wyniki;
     }
 
-    private static WynikStopnia obliczWynikIStopnia(long calkowitaPula, int liczbaTrafien, Centrala centrala) {
+    private static WynikStopnia obliczWynikIStopniaBezKumulacji(long calkowitaPula, int liczbaTrafien,
+                                                                Centrala centrala) {
+        long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN) / 100;
+        return new WynikStopnia((liczbaTrafien > 0) ? mojaPula/ liczbaTrafien : 0,
+                liczbaTrafien, mojaPula);
+    }
+    private static WynikStopnia obliczWynikIStopniaZKumulacja(long calkowitaPula, int liczbaTrafien, Centrala centrala) {
         long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100 + centrala.dajKumulacje();
         // zabezpieczenie przed dzieleniem przez 0
         // jak ktos trafil to zeruj kumulacje
