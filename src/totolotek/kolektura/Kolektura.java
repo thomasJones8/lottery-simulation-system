@@ -40,7 +40,7 @@ public class Kolektura {
         bez blankietu : sprawdza czy stac gracza, jak go
         stac to generuje zaklady i wywoluje prywatna metode dokoncz sprzedaz
      */
-    private static List<Zaklad> generujZakladyChybilTrafil(int ile) {
+    public static List<Zaklad> generujZakladyChybilTrafil(int ile) {
         ArrayList<Zaklad> lista = new ArrayList<Zaklad>();
         for (int i = 0; i < ile; i++) {
             lista.add(Zaklad.stworzChybilTrafil());

@@ -2,6 +2,22 @@ poprawic wypisywanie w centrali
 przejrzec specyfikacje
 usunac dziwne kom
 zmienic te metode static co wyszla dziwna
+DOROBIC KONIECZNIE TESTY
+usunac puste testy
+
+testy:
+blankiet - git, ale ze 2 testy mozna by dodac, chbya ze sa w polu
+kupon: same
+
+
+wyliczanie wielkości nagród określonych stopni (na podstawie liczby sprzedanych kuponów,
+ liczby wygranych danego stopnia w losowaniu i kumulacji),
+
+sprzedaż kuponu (ze sprawdzeniem stanów kont centrali i gracza oraz wielkości odprowadzonego podatku do budżetu).
+
+
+
+
 ---
 w centrali static cos tam zmienia
 powinienem weryfikowac numeracje pol w blankiecie

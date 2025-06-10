@@ -6,7 +6,6 @@ import totolotek.domain.WynikStopnia;
 import totolotek.util.Stale;
 import totolotek.domain.Zaklad;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

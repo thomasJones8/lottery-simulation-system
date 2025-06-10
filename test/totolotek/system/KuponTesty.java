@@ -2,7 +2,7 @@ package totolotek.system;
 
 import org.junit.jupiter.api.Test;
 import totolotek.domain.Zaklad;
-import totolotek.system.Kupon;
+import totolotek.kolektura.Kolektura;
 
 import java.util.List;
 import java.util.Set;
@@ -11,11 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class KuponTesty {
 
-
-
-
-    // przetestuj toString, identyfikator itd
-
     @Test
     void testZlyKuponZaMaloZakladow() {
         assertThrows(IllegalArgumentException.class, ()-> {
@@ -23,15 +18,15 @@ public class KuponTesty {
         });
     }
 
-    /*
+
     @Test
     void testZlyKuponZaDuzoZakladow() {
-        Kolektura kolektura = new Kolektura()
         assertThrows(IllegalArgumentException.class, ()-> {
-            Kupon kupon = new Kupon(1,1,1, List.of(), 1);
+            Kupon kupon = new Kupon(1,1,1,
+                    Kolektura.generujZakladyChybilTrafil(Kupon.MAX_LICZBA_ZAKLADOW + 1), 1, 1);
         });
     }
-    */
+
 
     @Test
     void testZlyKuponZaMaloLosowan() {
@@ -48,8 +43,5 @@ public class KuponTesty {
         });
     }
 
-    @Test
-    void testZwyklyDobryKupon() {
 
-    }
 }

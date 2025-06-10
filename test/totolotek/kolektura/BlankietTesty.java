@@ -18,7 +18,8 @@ public class BlankietTesty {
     void przygotowanie() {
         mapaPoprawnaPelna = new HashMap<>();
         for (int i = 1; i <= Blankiet.LICZBA_POL_BLANKIET; i++) {
-            mapaPoprawnaPelna.put(i, new PoleBlankietu(Set.of(i, i + 1, i + 2, i + 3, i + 4, 49), false));
+            mapaPoprawnaPelna.put(i, new PoleBlankietu(Set.of(i, i + 1, i + 2, i + 3, i + 4, 49),
+                    false));
         }
     }
 

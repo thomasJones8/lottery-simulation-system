@@ -19,7 +19,6 @@ mam enum stopien nagrody, record wynik stopnia i mape ktora wiaze jedno z drugim
 
 */
 
-// pamietaj o nadpisaniu hashcode itd
 public class Centrala {
 
     public static final int PROCENT_NA_NAGRODY = 51;
@@ -72,7 +71,7 @@ public class Centrala {
         // oblicz calkowita pule na nagrody
         long calkowitaPula = obliczPuleNaNagrody(numerLosowania);
         // wyznacz kwoty nagrod kazdego stopnia
-        Map<StopienNagrody, WynikStopnia> wyniki = wyznaczNagrody(numerLosowania, trafienia, calkowitaPula);
+        Map<StopienNagrody, WynikStopnia> wyniki = wyznaczNagrody(trafienia, calkowitaPula);
 
         // stworz obiekt losowanie
         Losowanie losowanie = new Losowanie(numerLosowania, zwycieskieLiczby, wyniki);
@@ -80,7 +79,8 @@ public class Centrala {
         losowania.put(losowanie.dajNumer(), losowanie);
     }
 
-    private Map<StopienNagrody, WynikStopnia> wyznaczNagrody(int numerLosowania, EnumMap<StopienNagrody,
+    // miala byc prywatna, ale musialem ja upublicznic dla testu
+    public Map<StopienNagrody, WynikStopnia> wyznaczNagrody(EnumMap<StopienNagrody,
             Integer> trafienia, long calkowitaPula) {
         Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>(StopienNagrody.class);
         // ustalam wyniki : IV, I i II stopnia
@@ -118,11 +118,10 @@ public class Centrala {
         return wyniki;
     }
 
-    // uwzglednia kumulacje
+    // nie uwzglednia kumulacji - bo to by psulo 3 stopien
     private static WynikStopnia obliczWynikIStopnia(long calkowitaPula, int liczbaTrafien, Centrala centrala) {
         long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100 + centrala.dajKumulacje();
         // zabezpieczenie przed dzieleniem przez 0
-
         // jak ktos trafil to zeruj kumulacje
         if (liczbaTrafien > 0) {
             centrala.ustawKumulacje(0);
