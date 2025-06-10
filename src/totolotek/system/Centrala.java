@@ -84,12 +84,15 @@ public class Centrala {
             Integer> trafienia, long calkowitaPula) {
         Map<StopienNagrody, WynikStopnia> wyniki = new EnumMap<>(StopienNagrody.class);
         // ustalam wyniki : IV, I i II stopnia
+        long kumulacja = dajKumulacje();
         wyniki.put(StopienNagrody.IV_STOPIEN, obliczWynik4Stopnia(trafienia.getOrDefault(StopienNagrody.IV_STOPIEN, 0)));
         wyniki.put(StopienNagrody.I_STOPIEN, obliczWynikIStopnia(calkowitaPula, trafienia.getOrDefault(I_STOPIEN, 0), this));
         wyniki.put(StopienNagrody.II_STOPIEN, obliczWynikIIStopnia(calkowitaPula,
                 trafienia.getOrDefault(StopienNagrody.II_STOPIEN, 0)));
         // od calkowitej puli odejmuje pozostale nagrody, aby obliczyc wynik III stopnia
-        long resztaPuli = calkowitaPula - wyniki.values().stream().mapToLong(WynikStopnia::lacznaPulaNagrod).sum();
+        // dodaje kumulacje, zeby wyrownac jej odjecie (bo jest czescia I stopnia)
+        long resztaPuli = calkowitaPula - wyniki.values().stream().mapToLong(WynikStopnia::lacznaPulaNagrod).sum()
+                + ((dajKumulacje() == 0) ? kumulacja : 0);
         wyniki.put(StopienNagrody.III_STOPIEN, obliczWynikIIIStopnia(resztaPuli,
                 trafienia.getOrDefault(StopienNagrody.III_STOPIEN, 0)));
         // dopiero teraz uwzgledniamy minimum puli 1 stopnia, aby nie uszczuplilo puli III stopnia
@@ -118,7 +121,6 @@ public class Centrala {
         return wyniki;
     }
 
-    // nie uwzglednia kumulacji - bo to by psulo 3 stopien
     private static WynikStopnia obliczWynikIStopnia(long calkowitaPula, int liczbaTrafien, Centrala centrala) {
         long mojaPula = (calkowitaPula * PROCENT_NA_1_STOPIEN)/ 100 + centrala.dajKumulacje();
         // zabezpieczenie przed dzieleniem przez 0
@@ -132,8 +134,8 @@ public class Centrala {
             centrala.ustawKumulacje(mojaPula);
             return new WynikStopnia(0, liczbaTrafien, mojaPula);
         }
-
     }
+    // uwzglednia kumulacje
 
     private static WynikStopnia obliczWynikIIStopnia(long calkowitaPula, int liczbaTrafien) {
         long mojaPula = (calkowitaPula * PROCENT_NA_2_STOPIEN) / 100;
