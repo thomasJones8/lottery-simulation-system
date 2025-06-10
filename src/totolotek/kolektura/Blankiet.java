@@ -1,9 +1,11 @@
 package totolotek.kolektura;
 
+import totolotek.system.Kupon;
 import totolotek.util.Stale;
 import totolotek.domain.Zaklad;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /*
 W konstruktorze od razu dokonuje interpretacji liczby losowan na podstawie zaznaczonych liczb,
@@ -33,12 +35,21 @@ public class Blankiet {
     public int dajLiczbeLosowan() {return liczbaLosowan;}
     public List<Zaklad> dajPoprawneNieanulowaneZaklady() {
         List<Zaklad> lista = new ArrayList<Zaklad>();
-        for (int i = 1; i <= pola.size(); i++) {
-            PoleBlankietu pole = pola.get(i);
+        for (PoleBlankietu pole : pola.values()) {
             if (pole.czyDobry()) {
                 lista.add(new Zaklad(pole.dajSkresloneLiczby()));
             }
         }
         return lista;
+    }
+
+    // tworzy blankiet z jednym dzialajacym (nieanulowanym i poprawnym) zakladem
+    // na losowa liczbe losowan. Jest to zgodne z dyskuja na forum na ten temat
+    public static Blankiet stworzLosowyPoprawny() {
+        PoleBlankietu pole = new PoleBlankietu(Zaklad.losujSzostke(), false);
+        Map<Integer, PoleBlankietu> mapa = new HashMap<>();
+        mapa.put(1,pole);
+        int liczbaLosowan = ThreadLocalRandom.current().nextInt(Kupon.MAX_LICZBA_LOSOWAN) + 1;
+        return new Blankiet(mapa, Set.of(liczbaLosowan));
     }
 }

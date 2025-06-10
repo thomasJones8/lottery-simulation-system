@@ -1,10 +1,9 @@
 package totolotek.app;
 
 
-import totolotek.gracz.Gracz;
-import totolotek.gracz.Losowy;
-import totolotek.gracz.Minimalista;
-import totolotek.gracz.Staloliczbowy;
+import totolotek.domain.Zaklad;
+import totolotek.gracz.*;
+import totolotek.kolektura.Blankiet;
 import totolotek.system.Centrala;
 import totolotek.kolektura.Kolektura;
 
@@ -31,7 +30,7 @@ public class Main {
         Integer pesel = 0;
         for (int i = 0; i < 200; i++) {
             wszyscyGracze.add(new Minimalista("a", "b", pesel.toString(),
-                    100,  listaKolektur.get(i % listaKolektur.size())));
+                    10000L,  listaKolektur.get(i % listaKolektur.size())));
             pesel++;
         }
 
@@ -41,7 +40,14 @@ public class Main {
         }
 
         for (int i = 0; i < 200; i++) {
-            wszyscyGracze.add(new Staloliczbowy("a", "b", pesel.toString()));
+            wszyscyGracze.add(new Staloliczbowy("a", "b", pesel.toString(),
+                    10000L, wylosujPodzbior(listaKolektur) , Zaklad.losujSzostke()));
+            pesel++;
+        }
+
+        for (int i = 0; i < 200; i++) {
+            wszyscyGracze.add(new Staloblankietowy("a", "b", pesel.toString(),
+                    10000L, wylosujPodzbior(listaKolektur), Blankiet.stworzLosowyPoprawny());
             pesel++;
         }
 

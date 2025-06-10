@@ -1,3 +1,5 @@
+powinienem weryfikowac numeracje pol w blankiecie
+
 Informacja o zwycięskiej szóstce,
 puli nagród I stopnia i kwotach wygranych każdego stopnia (tylko tych trafionych) muszą być dostępne publicznie
 
