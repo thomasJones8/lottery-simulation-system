@@ -61,8 +61,5 @@ public class SprzedazKuponuTestIntegracyjny {
         // gracz powinen miec pusty portfel, bo mial tylko na 1 kupon
         assertEquals(0, minimalista.dajPortfel());
     }
-    
-    
-
 
 }
